@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جیب‌به‌جیب | دستیار لوکس خرید تو</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0f19;
+            background-image: radial-gradient(circle at 50% 30%, rgba(139, 92, 246, 0.15), transparent 60%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        header {
+            width: 100%;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+        }
+
+        .menu-wrapper {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .menu-btn {
+            background: #111827;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            position: relative;
+            z-index: 10;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #00ffcc, #8b5cf6, #d946ef, #00ffcc);
+            background-size: 400%;
+            border-radius: 14px;
+            z-index: -1;
+            animation: rgbNeon 4s linear infinite;
+        }
+
+        @keyframes rgbNeon {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .menu-btn span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background-color: #ffffff;
+            border-radius: 2px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #111827;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            min-width: 200px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.7);
+            z-index: 100;
+            border-radius: 12px;
+            padding: 6px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .menu-wrapper:hover .dropdown-content {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .dropdown-content a {
+            color: #cbd5e1;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: 0.3s ease;
+        }
+
+        .menu-wrapper:hover .dropdown-content a:nth-child(1) { opacity: 1; transform: translateX(0); transition-delay: 0.1s; }
+        .menu-wrapper:hover .dropdown-content a:nth-child(2) { opacity: 1; transform: translateX(0); transition-delay: 0.25s; }
+
+        .dropdown-content a:hover {
+            background-color: rgba(139, 92, 246, 0.2);
+            color: white;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 550px;
+            padding: 20px;
+        }
+
+        #main-view {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-size: 26px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            background: linear-gradient(270deg, #10b981, #8b5cf6, #d946ef, #10b981);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: relaxLogo 6s ease infinite;
+        }
+
+        @keyframes relaxLogo {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .slogan {
+            font-size: 36px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .sub-slogan {
+            color: #9ca3af;
+            font-size: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-wrapper {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            width: 100%;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 18px 50px 18px 20px;
+            font-size: 16px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            outline: none;
+            color: #ffffff;
+            text-align: right;
+            transition: border-color 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        .search-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 18px;
+            font-size: 16px;
+            font-weight: 700;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            cursor: pointer;
+            background: linear-gradient(270deg, #8b5cf6, #f97316, #8b5cf6);
+            background-size: 600% 600%;
+            animation: rgbNeon 6s ease infinite;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .history-section, .trending-section {
+            margin-top: 25px;
+            text-align: right;
+        }
+        
+        .history-title, .trending-title {
+            font-size: 13px;
+            color: #a78bfa;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            color: #cbd5e1;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tag-item:hover {
+            background: rgba(139, 92, 246, 0.2);
+            color: white;
+            border-color: #8b5cf6;
+        }
+
+        /* استایل‌های صفحه نتایج جدید کاملاً داخلی */
+        #results-view {
+            display: none;
+            width: 100%;
+            max-width: 750px;
+            background: rgba(255, 255, 255, 0.02); 
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border-radius: 24px; 
+            padding: 35px; 
+            position: relative;
+            margin-top: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+
+        .back-home-btn {
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            background: rgba(139, 92, 246, 0.2);
+            color: #c084fc;
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .back-home-btn:hover { background: #8b5cf6; color: white; }
+
+        .price-estimate-box {
+            background: rgba(167, 139, 250, 0.1);
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            padding: 18px; border-radius: 14px; margin: 25px 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .estimate-title { font-size: 14px; color: #c084fc; font-weight: bold; }
+        .estimate-range { font-size: 16px; color: #ffffff; font-weight: 700; }
+
+        .featured-booth-box {
+            border: 2px solid #f97316;
+            background: linear-gradient(180deg, rgba(249, 115, 22, 0.08), transparent);
+            border-radius: 18px; padding: 20px; margin-bottom: 30px;
+            text-decoration: none; display: block; transition: 0.3s;
+        }
+        .featured-booth-box:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(249, 115, 22, 0.2); }
+        .booth-title { font-size: 15px; color: #f97316; font-weight: bold; margin-bottom: 15px; }
+        .booth-item { display: flex; gap: 20px; align-items: center; }
+        .booth-img { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; }
+        .booth-details h4 { color: #ffffff; font-size: 15px; margin-bottom: 5px; }
+        .booth-details p { color: #9ca3af; font-size: 13px; }
+
+        .product-header { display: flex; gap: 30px; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 25px; margin-bottom: 25px; }
+        .product-img { width: 130px; height: 130px; object-fit: cover; border-radius: 16px; }
+        
+        .price-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-radius: 14px; margin-bottom: 12px; background: rgba(255,255,255,0.01); border: 1px solid rgba(255,255,255,0.06); text-align: right;}
+        .cheapest { background: rgba(22, 163, 74, 0.08); border-color: rgba(22, 163, 74, 0.3); }
+        .buy-btn { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 8px 16px; border-radius: 10px; font-size: 13px; text-decoration: none; }
+        .cheapest .buy-btn { background: #16a34a; border: none; }
+        .history-link-btn { background: rgba(249, 115, 22, 0.15); color: #fdba74; border: 1px solid rgba(249, 115, 22, 0.3); padding: 8px 16px; border-radius: 8px; font-size: 13px; text-decoration: none; display: inline-block; margin-bottom: 25px;}
+        .disclaimer { font-size: 11px; color: #9ca3af; text-align: center; margin-top: 25px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="menu-wrapper">
+            <button class="menu-btn">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="dropdown-content">
+                <a href="https://basalam.com/landing/lightning-sale" target="_blank">🔥 تخفیف لحظه‌ای باسلام</a>
+                <a href="https://www.digikala.com/incredible-offers/" target="_blank">⚡️ شگفت‌انگیز دیجی‌کالا</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" id="main-view">
+        <div class="brand-logo">JibBeJib AI</div>
+        <h1 class="slogan">محصولت را گران نخر!</h1>
+        <p class="sub-slogan">هوشمندترین رادار جستجوی تخفیف و مقایسه قیمت لحظه‌ای در ایران</p>
+        
+        <div class="search-wrapper">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="keyword" class="search-box" placeholder="اسم کالا رو برام بنویس..." oninput="changeBoxColor()">
+            </div>
+            <button class="search-btn" onclick="openResultPage()">شکار ارزان‌ترین قیمت</button>
+            
+            <div class="history-section">
+                <div class="history-title">🔍 جستجوهای اخیر شما:</div>
+                <div class="tags-container" id="historyTags"></div>
+            </div>
+
+            <div class="trending-section">
+                <div class="trending-title">✨ محبوب‌ترین‌های این هفته:</div>
+                <div class="tags-container" id="trendingTags"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="results-view">
+        <button class="back-home-btn" onclick="goBackHome()">← بازگشت به جیب‌به‌جیب</button>
+
+        <div style="max-width: 65%; font-size: 14px; margin-bottom: 25px; color: #9ca3af; text-align: right;">
+            <strong>سیستم رادار جیب‌به‌جیب با موفقیت پایان یافت.</strong>
+        </div>
+
+        <div class="price-estimate-box">
+            <span class="estimate-title">📊 محدوده قیمت تقریبی بازار:</span>
+            <span id="range-text" class="estimate-range">بین ۰ تا ۰ میلیون تومان</span>
+        </div>
+
+        <a id="booth-link" href="#" target="_blank" class="featured-booth-box">
+            <div class="booth-title">⭐️ غرفه پیشنهادی و برتر هفته در باسلام:</div>
+            <div class="booth-item">
+                <img src="https://image.pollinations.ai/prompt/premium%20box%20gadget%20shopping" class="booth-img">
+                <div class="booth-details">
+                    <h4 id="booth-product-title">مشاهده غرفه‌های فعال کالا</h4>
+                    <p>جهت بررسی بدون واسطه محصولات، خرید مستقیم و دریافت تخفیف‌های غرفه‌داران کلیک کنید.</p>
+                </div>
+            </div>
+        </a>
+
+        <div style="text-align: right;">
+            <a id="torob-chart-link" href="#" target="_blank" class="history-link-btn">📈 بررسی نمودار قیمت در ۳۰ روز گذشته ترب</a>
+        </div>
+
+        <div class="product-header">
+            <img id="product-dynamic-img" src="" class="product-img">
+            <h2 id="search-title">نتایج بررسی هوشمند</h2>
+        </div>
+
+        <div class="price-row cheapest">
+            <span>🔥 موتور جستجوی ترب (کف قیمت بازار)</span>
+            <a id="link-torob" href="#" target="_blank" class="buy-btn">شکار قیمت</a>
+        </div>
+        <div class="price-row">
+            <span>فروشگاه سراسری دیجی‌کالا</span>
+            <a id="link-digikala" href="#" target="_blank" class="buy-btn">بررسی نرخ</a>
+        </div>
+        <div class="price-row">
+            <span>اسنپ شاپ (Snapp Shop)</span>
+            <a id="link-snapp" href="#" target="_blank" class="buy-btn">بررسی نرخ</a>
+        </div>
+        <div class="price-row">
+            <span>وب‌سایت مرجع ایمالز (Emalls)</span>
+            <a href="https://emalls.ir" target="_blank" class="buy-btn">ورود به سایت</a>
+        </div>
+        <div class="price-row">
+            <span>بازار اجتماعی باسلام</span>
+            <a id="link-basalam" href="#" target="_blank" class="buy-btn">بررسی نرخ</a>
+        </div>
+        <div class="price-row">
+            <span>پلتفرم تخفیفان (کدهای تخفیف کالا)</span>
+            <a id="link-takhfifan" href="#" target="_blank" class="buy-btn">بررسی تخفیف</a>
+        </div>
+
+        <div class="disclaimer">قیمت‌های تقریبی ممکن است با نرخ لحظه‌ای فروشگاه‌ها اختلاف داشته باشند.</div>
+    </div>
+
+    <script>
+        let history = JSON.parse(localStorage.getItem('jib_history')) || ['آیفون 15 پرو', 'پلی استیشن 5'];
+        const trendingItems = ['پلی استیشن 5', 'ایرپاد پرو', 'ساعت هوشمند', 'کفش رانینگ'];
+        
+        function changeBoxColor() {
+            const colors = ['#00ffcc', '#8b5cf6', '#d946ef', '#f97316', '#10b981', '#3b82f6', '#ef4444'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            const searchBox = document.getElementById('keyword');
+            searchBox.style.borderColor = randomColor;
+            searchBox.style.boxShadow = `0 0 15px ${randomColor}`;
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('historyTags');
+            container.innerHTML = '';
+            history.forEach(item => {
+                const tag = document.createElement('span');
+                tag.className = 'tag-item';
+                tag.innerText = item;
+                tag.onclick = () => { document.getElementById('keyword').value = item; changeBoxColor(); openResultPage(); };
+                container.appendChild(tag);
+            });
+        }
+
+        function renderTrending() {
+            const container = document.getElementById('trendingTags');
+            container.innerHTML = '';
+            trendingItems.forEach(item => {
+                const tag = document.createElement('span');
+                tag.className = 'tag-item';
+                tag.innerText = item;
+                tag.style.borderColor = 'rgba(249, 115, 22, 0.3)';
+                tag.onclick = () => { document.getElementById('keyword').value = item; changeBoxColor(); openResultPage(); };
+                container.appendChild(tag);
+            });
+        }
+        
+        renderHistory();
+        renderTrending();
+
+        function openResultPage() {
+            var query = document.getElementById('keyword').value.trim();
+            if (query === "") { alert("لطفاً نام کالا را وارد نمایید."); return; }
+
+            if (!history.includes(query)) {
+                history.unshift(query);
+                if(history.length > 4) history.pop();
+                localStorage.setItem('jib_history', JSON.stringify(history));
+                renderHistory();
+            }
+
+            let minPrice = 3; let maxPrice = 5;
+            let lowerQuery = query.toLowerCase();
+            if (lowerQuery.includes('پلی استیشن') || lowerQuery.includes('ps5')) { minPrice = 28; maxPrice = 34; }
+            else if (lowerQuery.includes('آیفون')) { minPrice = 45; maxPrice = 95; }
+
+            var encodedQuery = encodeURIComponent(query);
+
+            // مقداردهی داینامیک به المان‌های صفحه نتایج داخلی
+            document.getElementById('range-text').innerText = `بین ${minPrice} تا ${maxPrice} میلیون تومان`;
+            document.getElementById('booth-product-title').innerText = `مشاهده غرفه‌های فعال کالا: ${query}`;
+            document.getElementById('search-title').innerText = `نتایج بررسی هوشمند برای: ${query}`;
+            document.getElementById('product-dynamic-img').src = `https://image.pollinations.ai/prompt/${encodedQuery}`;
+            
+            // ست کردن لینک‌ها
+            document.getElementById('booth-link').href = `https://basalam.com/search?q=${encodedQuery}`;
+            document.getElementById('torob-chart-link').href = `https://torob.com/search/?query=${encodedQuery}`;
+            document.getElementById('link-torob').href = `https://torob.com/search/?query=${encodedQuery}`;
+            document.getElementById('link-digikala').href = `https://www.digikala.com/search/?q=${encodedQuery}`;
+            document.getElementById('link-snapp').href = `https://snappshop.ir/search?q=${encodedQuery}`;
+            document.getElementById('link-basalam').href = `https://basalam.com/search?q=${encodedQuery}`;
+            document.getElementById('link-takhfifan').href = `https://takhfifan.com/search?q=${encodedQuery}`;
+
+            // سوییچ کردن ویوها (حل ۱۰۰٪ مشکل دکمه بازگشت)
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('results-view').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function goBackHome() {
+            document.getElementById('results-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'flex';
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
